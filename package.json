@@ -4,7 +4,9 @@
   "description": "Base for Angular2 application",
   "main": "index.js",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "build": "gulp build-app",
+    "server": "lite-server"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "browserify": "^13.1.0",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
+    "lite-server": "^2.2.2",
     "tsify": "^1.0.6",
     "typescript": "^1.8.10",
     "vinyl-source-stream": "^1.1.0"

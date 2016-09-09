@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
 
     paths = {
-        resources: ['src/*.html']
+        resources: ['src/**/*.html']
     },
 
     options = {
@@ -33,6 +33,17 @@ gulp.task('resources', function () {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task("libs", () => {
+    return gulp.src([
+            'core-js/client/shim.min.js',
+            'reflect-metadata/Reflect.js',
+            'rxjs/**',
+            'zone.js/dist/**',
+            '@angular/**'
+        ], {cwd: "node_modules/**"})
+        .pipe(gulp.dest("dist/lib"));
+});
+
 //Compile typescript
 gulp.task('compile', function () {
     return browserify(options.browserify)
@@ -44,4 +55,5 @@ gulp.task('compile', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['compile', 'resources']);
+gulp.task('build-app', ['compile', 'resources']);
+gulp.task('default', ['libs', 'compile', 'resources']);
