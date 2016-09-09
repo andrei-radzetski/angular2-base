@@ -2,6 +2,7 @@
     "compilerOptions": {
         "noImplicitAny": true,
         "experimentalDecorators": true,
+        "module": "commonjs",
         "target": "es2015"
     },
     "files": [
