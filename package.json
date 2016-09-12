@@ -4,8 +4,10 @@
   "description": "Base for Angular2 application",
   "main": "index.js",
   "scripts": {
-    "start": "gulp",
-    "build": "gulp build-app",
+    "start": "npm run build:all && concurrently --kill-others \"npm run watch\" \"npm run server\" ",
+    "build:all": "gulp build:all",
+    "build:app": "gulp build:app",
+    "watch": "gulp watch",
     "server": "lite-server"
   },
   "repository": {
@@ -25,11 +27,16 @@
     "babel-preset-es2015": "^6.14.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
+    "concurrently": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-if": "^2.0.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
     "lite-server": "^2.2.2",
     "tsify": "^1.0.6",
     "typescript": "^1.8.10",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {

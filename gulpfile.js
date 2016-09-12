@@ -4,56 +4,52 @@ var gulp = require('gulp'),
     source = require('vinyl-source-stream'),
     babelify = require('babelify'),
     gutil = require('gulp-util'),
-
-    paths = {
-        resources: ['src/**/*.html']
-    },
-
-    options = {
-        browserify: {
-            basedir: '.',
-            debug: true,
-            entries: ['src/main.ts'],
-            cache: {},
-            packageCache: {}
-        },
-        /* 
-         * This is additional babelify option,
-         * all options from http://babeljs.io/docs/usage/options/ 
-         * needs to put in the .babelrc file
-         */
-        babelify: {
-            extensions: ['.tsx', '.ts', '.js']
-        }
-    };
+    uglify = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
+    buffer = require('vinyl-buffer'),
+    gulpif = require('gulp-if'),
+    config = require('./config.json');
 
 // Moves resources to dist folder
 gulp.task('resources', function () {
-    return gulp.src(paths.resources)
-        .pipe(gulp.dest('dist'));
+    return gulp.src(config.resourcesPaths)
+        .pipe(gulp.dest(config.distFolderName));
 });
 
-gulp.task("libs", () => {
-    return gulp.src([
-            'core-js/client/shim.min.js',
-            'reflect-metadata/Reflect.js',
-            'rxjs/**',
-            'zone.js/dist/**',
-            '@angular/**'
-        ], {cwd: "node_modules/**"})
-        .pipe(gulp.dest("dist/lib"));
+gulp.task("libs", function () {
+    return gulp.src(config.libsPaths,
+        { cwd: "node_modules/**" })
+        .pipe(gulp.dest(config.distLibsFolderName));
 });
 
 //Compile typescript
 gulp.task('compile', function () {
-    return browserify(options.browserify)
+    return browserify(config.browserify)
         .plugin(tsify)
-        .transform(babelify, options.babelify)
+        /* 
+         * Options like "extensions" is additional babelify 
+         * option, see "config.json",
+         * all options from http://babeljs.io/docs/usage/options/ 
+         * needs to put in the .babelrc file
+         */
+        .transform(babelify, config.babelify)
         .bundle()
         .on('error', gutil.log)
-        .pipe(source('bundle.js'))
-        .pipe(gulp.dest('dist'));
+        .pipe(source(config.bundleJSFileName))
+
+        .pipe(gulpif(config.prod, buffer()))
+        .pipe(gulpif(config.prod, sourcemaps.init({ loadMaps: true })))
+        .pipe(gulpif(config.prod, uglify()))
+        .pipe(gulpif(config.prod, sourcemaps.write('./')))
+
+        .pipe(gulp.dest(config.distJSFolderName));
 });
 
-gulp.task('build-app', ['compile', 'resources']);
-gulp.task('default', ['libs', 'compile', 'resources']);
+gulp.task('watch', function () {
+    gulp.watch(config.tsPaths, ['compile']);
+    gulp.watch(config.resourcesPaths, ['resources']);
+});
+
+gulp.task('build:app', ['compile', 'resources']);
+gulp.task('build:all', ['libs', 'build:app']);
+gulp.task('default', ['build:all']);
