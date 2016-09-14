@@ -8,6 +8,8 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     buffer = require('vinyl-buffer'),
     gulpif = require('gulp-if'),
+    sass = require('gulp-sass'),
+    concat = require('gulp-concat'),
     config = require('./config.json');
 
 // Moves resources to dist folder
@@ -45,11 +47,23 @@ gulp.task('compile', function () {
         .pipe(gulp.dest(config.distJSFolderName));
 });
 
+// Compile SASS
+gulp.task('sass', function () {
+    return gulp.src(config.mainSCSSFilePath)
+        .pipe(gulpif(config.prod, sourcemaps.init({ loadMaps: true })))
+        .pipe(sass(config.prod ? { outputStyle: 'compressed' } : undefined)
+        .on('error', sass.logError))
+        .pipe(concat(config.bundleCSSFileName))
+        .pipe(gulpif(config.prod, sourcemaps.write('./')))
+        .pipe(gulp.dest(config.distCSSFolderName));
+});
+
 gulp.task('watch', function () {
     gulp.watch(config.tsPaths, ['compile']);
     gulp.watch(config.resourcesPaths, ['resources']);
+    gulp.watch(config.scssPaths, ['sass']);
 });
 
-gulp.task('build:app', ['compile', 'resources']);
+gulp.task('build:app', ['compile', 'resources', 'sass']);
 gulp.task('build:all', ['libs', 'build:app']);
 gulp.task('default', ['build:all']);

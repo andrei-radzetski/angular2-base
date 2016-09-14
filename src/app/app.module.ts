@@ -2,21 +2,22 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { AboutComponent } from './about';
-import { HomeComponent } from './home';
 import { routing,
     appRoutingProviders } from './app.routing';
+
+import { AboutModule } from './about';
+import { HomeModule } from './home';
 
 
 @NgModule({
     imports: [
         BrowserModule,
-        routing
+        routing,
+        HomeModule,
+        AboutModule
     ],
     declarations: [
-        AppComponent, 
-        AboutComponent, 
-        HomeComponent
+        AppComponent
     ],
     providers: [
         appRoutingProviders

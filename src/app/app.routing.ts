@@ -1,8 +1,9 @@
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
 
-import { AboutComponent } from './about';
 import { HomeComponent } from './home';
+import { AboutComponent,
+            aboutRoutes } from './about';
 
 
 const appRoutes: Routes = [
@@ -11,20 +12,7 @@ const appRoutes: Routes = [
         redirectTo: '/home',
         pathMatch: 'full'
     },
-    {
-        path: 'home',
-        component: HomeComponent,
-        children: [
-            {
-                path: 'about',
-                component: AboutComponent
-            },
-            {
-                path: '',
-                component: HomeComponent
-            }
-        ]
-    },
+    ...aboutRoutes,
     {
         path: '**',
         redirectTo: '/home'
