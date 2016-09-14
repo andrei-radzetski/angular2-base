@@ -17,7 +17,9 @@
         "reflect-metadata/Reflect.js",
         "rxjs/**",
         "zone.js/dist/**",
-        "@angular/**"
+        "@angular/**",
+        "bootstrap/dist/**",
+        "jquery/dist/**"
     ],
     "tsPaths": [
         "./src/**/*.ts"
